@@ -14,9 +14,12 @@ import patchcore.patchcore
 import patchcore.sampler
 import patchcore.utils
 
+from time import time
+
 LOGGER = logging.getLogger(__name__)
 
-_DATASETS = {"mvtec": ["patchcore.datasets.mvtec", "MVTecDataset"]}
+_DATASETS = {"mvtec": ["patchcore.datasets.mvtec", "MVTecDataset"],
+             "visa": ["patchcore.datasets.visa", "VisADataset"]}
 
 
 @click.group(chain=True)
@@ -55,10 +58,11 @@ def run(
     # because there was GPU memory-bleeding which I could only fix with
     # context managers.
     device_context = (
-        torch.cuda.device("cuda:{}".format(device.index))
+        torch.device("cuda:{}".format(device.index))
         if "cuda" in device.type.lower()
         else contextlib.suppress()
     )
+
 
     result_collect = []
 
@@ -94,7 +98,9 @@ def run(
                     "Training models ({}/{})".format(i + 1, len(PatchCore_list))
                 )
                 torch.cuda.empty_cache()
+                start = time()
                 PatchCore.fit(dataloaders["training"])
+                mid = time()
 
             torch.cuda.empty_cache()
             aggregator = {"scores": [], "segmentations": []}
@@ -105,9 +111,11 @@ def run(
                         i + 1, len(PatchCore_list)
                     )
                 )
+                mid2 = time()
                 scores, segmentations, labels_gt, masks_gt = PatchCore.predict(
                     dataloaders["testing"]
                 )
+                end = time()
                 aggregator["scores"].append(scores)
                 aggregator["segmentations"].append(segmentations)
 
@@ -132,7 +140,7 @@ def run(
             segmentations = np.mean(segmentations, axis=0)
 
             anomaly_labels = [
-                x[1] != "good" for x in dataloaders["testing"].dataset.data_to_iterate
+                x[1] != "good" and x[1] != "Normal" for x in dataloaders["testing"].dataset.data_to_iterate
             ]
 
             # (Optional) Plot example images.
@@ -201,6 +209,9 @@ def run(
                     "instance_auroc": auroc,
                     "full_pixel_auroc": full_pixel_auroc,
                     "anomaly_pixel_auroc": anomaly_pixel_auroc,
+                    "pixel_aupro": pixel_scores["aupro"],
+                    "train_time": mid-start,
+                    "test_time": end-mid2
                 }
             )
 

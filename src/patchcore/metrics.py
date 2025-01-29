@@ -1,6 +1,8 @@
 """Anomaly metrics."""
 import numpy as np
 from sklearn import metrics
+from patchcore.mvtec_ad_evaluation.pro_curve_util import compute_pro
+from patchcore.mvtec_ad_evaluation.generic_util import trapezoid
 
 
 def compute_imagewise_retrieval_metrics(
@@ -66,11 +68,31 @@ def compute_pixelwise_retrieval_metrics(anomaly_segmentations, ground_truth_mask
     fpr_optim = np.mean(predictions > flat_ground_truth_masks)
     fnr_optim = np.mean(predictions < flat_ground_truth_masks)
 
+    anomaly_segmentations = [anomaly_map.squeeze() for anomaly_map in anomaly_segmentations]
+    ground_truth_masks = [gt_map.squeeze() for gt_map in ground_truth_masks]
+    aupro = calculate_aupro(anomaly_segmentations, ground_truth_masks)
+
     return {
         "auroc": auroc,
+        "aupro": aupro, 
         "fpr": fpr,
         "tpr": tpr,
         "optimal_threshold": optimal_threshold,
         "optimal_fpr": fpr_optim,
         "optimal_fnr": fnr_optim,
     }
+
+def calculate_aupro(anomaly_maps, gt_maps):
+        integration_limit=0.3
+
+        # Compute the PRO curve.
+        pro_curve = compute_pro(
+            anomaly_maps=anomaly_maps,
+            ground_truth_maps=gt_maps)
+
+        # Compute the area under the PRO curve.
+        au_pro = trapezoid(
+            pro_curve[0], pro_curve[1], x_max=integration_limit)
+        au_pro /= integration_limit
+
+        return au_pro

@@ -1,0 +1,3 @@
+Row Names,instance_auroc,full_pixel_auroc,anomaly_pixel_auroc,pixel_aupro,train_time,test_time
+visa_cashew,nan,nan,nan,0.8339290157225425,100.95120906829834,59.857805013656616
+Mean,nan,nan,nan,0.8339290157225425,100.95120906829834,59.857805013656616
