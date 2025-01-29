@@ -58,7 +58,7 @@ def run(
     # because there was GPU memory-bleeding which I could only fix with
     # context managers.
     device_context = (
-        torch.device("cuda:{}".format(device.index))
+        torch.cuda.device("cuda:{}".format(device.index))
         if "cuda" in device.type.lower()
         else contextlib.suppress()
     )
