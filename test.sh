@@ -1,4 +1,4 @@
-datapath=/users/marietteschonfeld/Code/AdversariApple/Data/mvtec_anomaly_detection
+datapath=/cw/dtaijupiter/NoCsBack/dtai/mariette/AdversariApple/Data/mvtec_anomaly_detection
 datasets=('bottle')
 dataset_flags=($(for dataset in "${datasets[@]}"; do echo '-d '"${dataset}"; done))
 
@@ -12,7 +12,7 @@ env PYTHONPATH=src python bin/run_patchcore.py --gpu "$gpu" --seed 0 --save_patc
 patch_core -b resnet18 -le layer2 -le layer3 --faiss_on_gpu --anomaly_scorer_num_nn 1 --patchsize 3 sampler -p 0.01 approx_greedy_coreset dataset --resize 256 --imagesize 256 "${dataset_flags[@]}" mvtec $datapath
 
 
-datapath=/users/marietteschonfeld/Code/AdversariApple/Data/VisA_20220922
+datapath=/cw/dtaijupiter/NoCsBack/dtai/mariette/AdversariApple/Data/VisA_20220922
 datasets=('candle')
 dataset_flags=($(for dataset in "${datasets[@]}"; do echo '-d '"${dataset}"; done))
 
