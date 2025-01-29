@@ -2,7 +2,7 @@ datapath=/users/marietteschonfeld/Code/AdversariApple/Data/mvtec_anomaly_detecti
 datasets=('bottle'  'cable'  'capsule'  'carpet'  'grid'  'hazelnut' 'leather'  'metal_nut'  'pill' 'screw' 'tile' 'toothbrush' 'transistor' 'wood' 'zipper')
 dataset_flags=($(for dataset in "${datasets[@]}"; do echo '-d '"${dataset}"; done))
 
-gpu=0
+gpu=3
 
 ############# Detection
 ### IM224:
