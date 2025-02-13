@@ -188,7 +188,7 @@ def run(
                 scores, anomaly_labels
             )["auroc"]
             print("shapes", segmentations[0].shape)
-            print(torch.Tensor(masks_gt).shape)
+            print(torch.Tensor(masks_gt[0]).shape)
             print(masks_gt[0].shape)
 
             # Compute PRO score & PW Auroc for all images
