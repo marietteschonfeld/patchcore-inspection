@@ -190,7 +190,7 @@ def run(
             anomaly_maps = []
             for i in range(segmentations.shape[0]):
                 anomaly_map = segmentations[i]
-                anomaly_map = transforms.functional.resize(torch.Tensor(anomaly_map), size=torch.Tensor(masks_gt[i]).shape[-2:])
+                anomaly_map = transforms.functional.resize(torch.Tensor(anomaly_map.unsqueeze(0)), size=torch.Tensor(masks_gt[i]).shape[-2:])
                 anomaly_map = anomaly_map.squeeze().numpy()
 
             # Compute PRO score & PW Auroc for all images
