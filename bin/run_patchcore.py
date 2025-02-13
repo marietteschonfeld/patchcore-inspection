@@ -187,22 +187,12 @@ def run(
             auroc = patchcore.metrics.compute_imagewise_retrieval_metrics(
                 scores, anomaly_labels
             )["auroc"]
-            print(segmentations.shape)
-            print(masks_gt.shape)
-            anomaly_maps = []
-            for i in range(segmentations.shape[0]):
-                print('shape', masks_gt[i].shape[-2:],segmentations[i].shape)
-                anomaly_map = transforms.functional.resize(torch.from_numpy(anomaly_map), size=masks_gt[i].shape[-2:])
-            anomaly_maps = [transforms.functional.resize(torch.from_numpy(anomaly_map), size=masks_gt[ind].shape[-2:]) for ind, anomaly_map in enumerate(segmentations)]
-            anomaly_maps = [anomaly_map.squeeze().numpy() for anomaly_map in anomaly_maps]
 
             # Compute PRO score & PW Auroc for all images
-            # pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
-            #     segmentations, masks_gt
-            # )
             pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
-                anomaly_maps, masks_gt
+                segmentations, masks_gt
             )
+
             full_pixel_auroc = pixel_scores["auroc"]
 
             # Compute PRO score & PW Auroc only images with anomalies

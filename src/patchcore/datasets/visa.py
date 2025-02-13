@@ -79,7 +79,7 @@ class VisADataset(torch.utils.data.Dataset):
 
         self.transform_mask = [
             transforms.ColorJitter(brightness=255),
-            # transforms.Resize((resize, resize)),
+            transforms.Resize((resize)),
             # transforms.CenterCrop(imagesize),
             transforms.ToTensor(),
         ]
