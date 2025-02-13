@@ -187,10 +187,6 @@ def run(
             auroc = patchcore.metrics.compute_imagewise_retrieval_metrics(
                 scores, anomaly_labels
             )["auroc"]
-            print("shapes", segmentations[0].shape)
-            print()
-            print(masks_gt[0].shape)
-
             anomaly_maps = []
             for i in range(segmentations.shape[0]):
                 anomaly_map = segmentations[i]
