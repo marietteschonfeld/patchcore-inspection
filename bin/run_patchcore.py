@@ -191,6 +191,7 @@ def run(
             for i in range(segmentations.shape[0]):
                 anomaly_map = segmentations[i]
                 anomaly_map = transforms.functional.resize(torch.Tensor(anomaly_map).unsqueeze(0), size=torch.Tensor(masks_gt[i]).shape[-2:])
+                print('anomalymap shape',anomaly_map.shape)
                 anomaly_map = anomaly_map.squeeze().numpy()
                 anomaly_maps.append(anomaly_map)
 
