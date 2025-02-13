@@ -3,7 +3,7 @@ datasets=('bottle'  'cable'  'capsule'  'carpet'  'grid'  'hazelnut' 'leather'  
 dataset_flags=($(for dataset in "${datasets[@]}"; do echo '-d '"${dataset}"; done))
 
 gpu=0
-sampling_ratio=0.0001
+sampling_ratio=0.00001
 
 ############# Detection
 ### IM224:
