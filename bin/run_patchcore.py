@@ -188,26 +188,36 @@ def run(
                 scores, anomaly_labels
             )["auroc"]
             print("shapes", segmentations[0].shape)
-            print(torch.Tensor(masks_gt[0]).shape)
+            print()
             print(masks_gt[0].shape)
 
+            anomaly_maps = []
+            for i in range(segmentations.shape[0]):
+                anomaly_map = segmentations[i]
+                anomaly_map = transforms.functional.resize(torch.Tensor(anomaly_map), size=torch.Tensor(masks_gt[i]).shape[-2:])
+                anomaly_map = anomaly_map.squeeze().numpy()
+
             # Compute PRO score & PW Auroc for all images
+            # pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
+            #     segmentations, masks_gt
+            # )
             pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
-                segmentations, masks_gt
+                anomaly_maps, masks_gt
             )
 
             full_pixel_auroc = pixel_scores["auroc"]
 
             # Compute PRO score & PW Auroc only images with anomalies
-            sel_idxs = []
-            for i in range(len(masks_gt)):
-                if np.sum(masks_gt[i]) > 0:
-                    sel_idxs.append(i)
-            pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
-                [segmentations[i] for i in sel_idxs],
-                [masks_gt[i] for i in sel_idxs],
-            )
-            anomaly_pixel_auroc = pixel_scores["auroc"]
+            # sel_idxs = []
+            # for i in range(len(masks_gt)):
+            #     if np.sum(masks_gt[i]) > 0:
+            #         sel_idxs.append(i)
+            # pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
+            #     [segmentations[i] for i in sel_idxs],
+            #     [masks_gt[i] for i in sel_idxs],
+            # )
+            # anomaly_pixel_auroc = pixel_scores["auroc"]
+            anomaly_pixel_auroc = 0
 
             result_collect.append(
                 {
