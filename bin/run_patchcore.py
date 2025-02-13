@@ -192,6 +192,7 @@ def run(
                 anomaly_map = segmentations[i]
                 anomaly_map = transforms.functional.resize(torch.Tensor(anomaly_map).unsqueeze(0), size=torch.Tensor(masks_gt[i]).shape[-2:])
                 anomaly_map = anomaly_map.squeeze().numpy()
+                anomaly_maps.append(anomaly_map)
 
             # Compute PRO score & PW Auroc for all images
             # pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
