@@ -14,6 +14,8 @@ import patchcore.patchcore
 import patchcore.sampler
 import patchcore.utils
 
+import torchvision.transforms.v2 as transforms
+
 from time import time
 
 LOGGER = logging.getLogger(__name__)
@@ -185,10 +187,15 @@ def run(
             auroc = patchcore.metrics.compute_imagewise_retrieval_metrics(
                 scores, anomaly_labels
             )["auroc"]
+            anomaly_maps = [transforms.functional.resize(torch.from_numpy(anomaly_map), size=masks_gt[ind].shape[-2:]) for ind, anomaly_map in enumerate(segmentations)]
+            anomaly_maps = [anomaly_map.squeeze().numpy() for anomaly_map in anomaly_maps]
 
             # Compute PRO score & PW Auroc for all images
+            # pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
+            #     segmentations, masks_gt
+            # )
             pixel_scores = patchcore.metrics.compute_pixelwise_retrieval_metrics(
-                segmentations, masks_gt
+                anomaly_maps, masks_gt
             )
             full_pixel_auroc = pixel_scores["auroc"]
 

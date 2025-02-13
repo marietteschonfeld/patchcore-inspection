@@ -80,7 +80,7 @@ class MVTecDataset(torch.utils.data.Dataset):
         self.transform_img = transforms.Compose(self.transform_img)
 
         self.transform_mask = [
-            transforms.Resize(resize),
+            # transforms.Resize(resize),
             # transforms.CenterCrop(imagesize),
             transforms.ToTensor(),
         ]

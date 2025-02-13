@@ -2,7 +2,7 @@ datapath=/cw/dtaijupiter/NoCsBack/dtai/mariette/AdversariApple/Data/mvtec_anomal
 datasets=('bottle'  'cable'  'capsule'  'carpet'  'grid'  'hazelnut' 'leather'  'metal_nut'  'pill' 'screw' 'tile' 'toothbrush' 'transistor' 'wood' 'zipper')
 dataset_flags=($(for dataset in "${datasets[@]}"; do echo '-d '"${dataset}"; done))
 
-gpu=3
+gpu=0
 
 ############# Detection
 ### IM224:
